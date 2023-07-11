@@ -1,5 +1,6 @@
 module aOCS
+using RCall
 
-greet() = print("Hello World!")
+include("optisel.jl")
 
 end # module aOCS

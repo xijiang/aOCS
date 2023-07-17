@@ -90,7 +90,7 @@ function splitgt(mgt, mkr, dic, lms, grt, dir, native)
         open("$dir/match/$grt.Chr$chr.txt", "w") do io
             print(io, "Name")
             for id in 1:(size(mgt, 2) ÷ 2)
-                print(io, " $grt-$id")
+                print(io, " $grt-$id $grt-$id")
             end
             println(io)
             for _ in 1:lms.nlc[chr]

@@ -1,7 +1,7 @@
 name = "aOCS"
 uuid = "b086eb89-b2d0-451b-ad57-14cca399d64c"
 authors = ["Xijiang Yu <xijiang@users.noreply.github.com>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"

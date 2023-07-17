@@ -16,7 +16,7 @@ function initR(dir, noff)
         library(optiSel)
         library(data.table)
         # below are IDs in my codes, changes every generation
-        animals <- optiSel::read.indiv(file.path(ppd, '0.Chr1.phased'), skip=0, cskip=2)
+        #animals <- optiSel::read.indiv(file.path(ppd, '0.Chr1.phased'), skip=0, cskip=2)
         lmp <- data.table::fread(paste0(otd, '/map.txt'))
         rfiles <- paste0(rbd, '/Others.Chr', 1:18, '.phased')
         cont <- data.frame(age=1, male=0.5, female=0.5)
@@ -28,14 +28,14 @@ function initR(dir, noff)
 end
 
 function initpt(grt, nid)
-    ids = String[]
+    animals = String[]
     for i in 1:nid
-        push!(ids, "$grt-$i")
+        push!(animals, "$grt-$i")
     end
     sex = rand(["male", "female"], nid)
-    @rput ids sex
+    @rput animals sex
     R"""
-      phen <- data.table(Indiv = ids, Sire = NA, Dam = NA, Born = grt + 1, Sex = sex, Breed="Y_YDH", EBV = NA)
+      phen <- data.table(Indiv = animals, Sire = NA, Dam = NA, Born = grt + 1, Sex = sex, Breed="Y_YDH", EBV = NA)
     """
 end
 
@@ -47,8 +47,8 @@ function optipm(grt; minSNP=20, minL=2.5)
     @rput grt minSNP minL
     R"""
         bfiles <- paste0(ppd, '/', grt, '.Chr', 1:18, '.phased')
-        fSEG <- segIBD(bfiles, lmp, minSNP = minSNP, minL = minL, keep = animals, skip=0, cskip = 2)
-        Pig <- fread(paste0(otd, '/genotyped.id'))
+        fSEG <- segIBD(bfiles, lmp, minSNP = minSNP, minL = minL, keep = NULL, skip=0, cskip = 2)
+        Pig <- fread(paste0(otd, '/genotyped.', grt))
         mfiles <- paste0(mtd, '/', grt, '.Chr', 1:18, '.txt')
         Comp <- segBreedComp(mfiles, lmp)
         setnames(Comp, old='native', new='segNC')
@@ -101,4 +101,20 @@ function pkped(mating, id)
         end
     end
     pm
+end
+
+"""
+    function replaceid(grn, id)
+Replace the native IDs in the genotyped file of generation `grn` in `dir` with `id`.
+"""
+function replaceid(dir, grn, id)
+    open("$dir/other/genotyped.$grn", "w") do io
+        println(io, "Indiv Breed")
+        for x in id
+            println(io, "$x Y_YDH")
+        end
+        for line in eachline("$dir/other/genotyped.other")
+            println(io, line)
+        end
+    end
 end

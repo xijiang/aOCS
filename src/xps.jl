@@ -27,20 +27,23 @@ This function do the following jobs:
   - Here it is once for all.
 """
 function xps(ngrt = 5, noff = 400; dir = "dat", native="ydh")
-    mgt, id, mkr, dic= mergegt(dir, native = native)
+    mgt, animals, mkr, dic= mergegt(dir, native = native)
     nmk = length(mkr)
     initR(dir, noff)
     @rget lmp
     lms = sumMap(DataFrame(chr=Int8.(lmp.Chr), pos = Int.(floor.(lmp.Mb .* 1e6))))
     for igrt in 0:ngrt
+      @info "Generation $igrt"
+      replaceid(dir, igrt, animals)
       matings = optipm(igrt)
-      pm = pkped(matings, id)
+      pm = pkped(matings, animals)
       nid = size(pm, 1)
       og = zeros(Int8, nmk, 2nid)
       drop(mgt, og, pm, lms)
       mgt = og
       og = nothing
       splitgt(mgt, mkr, dic, lms, igrt+1, dir, native)
-      initpt(igrt, nid)
+      initpt(igrt+1, nid)
+      @rget animals
     end
 end

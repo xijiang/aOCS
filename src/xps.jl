@@ -46,4 +46,5 @@ function xps(ngrt = 5, noff = 400; dir = "dat", native="ydh")
       initpt(igrt+1, nid)
       @rget animals
     end
+    summarize()
 end

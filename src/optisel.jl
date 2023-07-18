@@ -53,6 +53,7 @@ function optipm(grt; minSNP=20, minL=2.5)
         Comp <- segBreedComp(mfiles, lmp)
         setnames(Comp, old='native', new='segNC')
         fSEGN <- segIBDatN(list(hap.thisBreed=bfiles, hap.refBreed=rfiles, match=mfiles), Pig, lmp, thisBreed='Y_YDH', minSNP=20, minL=2.5, ubFreq=0.01)
+        # output: fSEGN
         phen <- merge(phen, Comp[, c("Indiv", "segNC")], on="Indiv")
         phen <- merge(phen, data.frame(Indiv=names(diag(fSEG)), F=(2*fSEG[row(fSEG)==col(fSEG)]-1)), on="Indiv")
         cand <- candes(phen = phen, fSEG = fSEG, fSEGN = fSEGN, cont = cont)
